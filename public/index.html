@@ -5,8 +5,20 @@
 	<link rel="stylesheet" href="./lib/bootstrap/dist/css/bootstrap.css">
 </head>
 <body>
+<div class="container text-center">
+	<h1>Lets Talk about Books Collection</h1>
+<script id="BookShow" type="text/template">
 
-	<h1>Hello Lets do it</h1>
+		<h3><%= title %></h3> 
+		<p><%= author %></p>
+</script>
+	<script id="BooksShow" type="text/template">
+		<h4>Books List (<%= length %>)</h4>
+		<ul></ul>
+	</script>
+
+</div>
+	
 
 <script src="./lib/jquery/dist/jquery.js"></script>
 <script src="./lib/underscore/underscore.js"></script>
