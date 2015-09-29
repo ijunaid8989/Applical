@@ -49,12 +49,7 @@ var BooksView = Backbone.View.extend({
 	render : function(){
 		this.$el.html( this.template(this.collection) );
 		var ul = this.$("ul");
-		this.collection.each(function(model){
-			this.children[model.cid] = new BookView({
-				model : model
-			});
-			ul.append(this.children[model.cid].render().el);
-		},this);
+		this.collection.each(this.addBook.bind(this));
 		return this;
 	},
 	removeModel : function(model){
@@ -76,7 +71,7 @@ var AddBookView = Backbone.View.extend({
 	},
 	render : function(){
 		
-		this.el.innerHTML = this.template();
+		this.$el.html(this.template());
 		return this;
 	},
 	addBook : function(evt){
@@ -84,6 +79,7 @@ var AddBookView = Backbone.View.extend({
 			title : this.$("#title").val(),
 			author : this.$("#author").val()
 		});
+
 	}
 });
 
