@@ -19,8 +19,15 @@ books.add({author : "Shakeel Rauf", title : "lets Dance over world"});
 books.add({author : "Love guru", title : "Love Oveerr tick tok"});
 
 var BookView = Backbone.View.extend({
+
 	template : _.template($("#BookShow").html()),
 	tagName : "li",
+	events : {
+		"click .remove" : "removeModel"
+	},
+	removeModel : function(evt){
+		this.model.collection.remove(this.model);
+	},
 	render : function(){
 		this.$el.html(this.template( this.model.toJSON() ));
 		return this;
@@ -29,18 +36,28 @@ var BookView = Backbone.View.extend({
 
 var BooksView = Backbone.View.extend({
 
-	template : _.template($("#BooksShow").html()),
-	//tagName : "ul",
+	initialize : function(){
+		this.listenTo(this.collection,"remove",this.removeModel);
+	},
+	template : _.template( $("#BooksShow").html() ),
+
+	children : {
+
+	},
+
 	render : function(){
 		this.$el.html( this.template(this.collection) );
-		var ul = this.$('ul');
+		var ul = this.$("ul");
 		this.collection.each(function(model){
-			var bookView = new BookView ({
+			this.children[model.cid] = new BookView({
 				model : model
 			});
-			ul.append(bookView.render().el);
-		});
+			ul.append(this.children[model.cid].render().el);
+		},this);
 		return this;
+	},
+	removeModel : function(model){
+		this.children[model.cid].remove();
 	}
 });
 
