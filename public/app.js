@@ -38,6 +38,7 @@ var BooksView = Backbone.View.extend({
 
 	initialize : function(){
 		this.listenTo(this.collection,"remove",this.removeModel);
+		this.listenTo(this.collection,"add",this.addBook);
 	},
 	template : _.template( $("#BooksShow").html() ),
 
@@ -58,11 +59,42 @@ var BooksView = Backbone.View.extend({
 	},
 	removeModel : function(model){
 		this.children[model.cid].remove();
+	},
+	addBook : function(model){
+		this.children[model.cid] = new BookView({
+			model : model
+		});
+		this.$("ul").append(this.children[model.cid].render().el);
 	}
 });
+
+var AddBookView = Backbone.View.extend({
+
+	template : _.template( $("#AddBook").html() ),
+	events : {
+		"click .add" : "addBook"
+	},
+	render : function(){
+		
+		this.el.innerHTML = this.template();
+		return this;
+	},
+	addBook : function(evt){
+		this.collection.add({
+			title : this.$("#title").val(),
+			author : this.$("#author").val()
+		});
+	}
+});
+
 
 var booksView = new BooksView({
 	collection : books
 });
 
+var addbookView = new AddBookView({
+	collection : books
+});
+
+$(".container").append(addbookView.render().el);
 $(".container").append(booksView.render().el);
